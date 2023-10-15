@@ -16,6 +16,7 @@ namespace InMemoryCacheApp.Controllers
             MemoryCacheEntryOptions memoryCacheEntryOptions = new MemoryCacheEntryOptions();
             memoryCacheEntryOptions.AbsoluteExpiration = DateTime.UtcNow.AddSeconds(10);
             memoryCacheEntryOptions.SlidingExpiration = TimeSpan.FromSeconds(10);
+            memoryCacheEntryOptions.Priority = CacheItemPriority.High;
             _memoryCache.Set<string>("time", DateTime.UtcNow.ToString(),memoryCacheEntryOptions);
             
             return View();
