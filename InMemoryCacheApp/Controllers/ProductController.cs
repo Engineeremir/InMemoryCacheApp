@@ -12,21 +12,20 @@ namespace InMemoryCacheApp.Controllers
         }
         public IActionResult Index()
         {
-            if (!_memoryCache.TryGetValue("time",out string timeCache))
-            {
-                _memoryCache.Set<string>("time", DateTime.UtcNow.ToString());
-            }
+            
+            MemoryCacheEntryOptions memoryCacheEntryOptions = new MemoryCacheEntryOptions();
+            memoryCacheEntryOptions.AbsoluteExpiration = DateTime.UtcNow.AddSeconds(10);
+            memoryCacheEntryOptions.SlidingExpiration = TimeSpan.FromSeconds(10);
+            _memoryCache.Set<string>("time", DateTime.UtcNow.ToString(),memoryCacheEntryOptions);
             
             return View();
         }
         public IActionResult Show()
         {
-            _memoryCache.GetOrCreate<string>("zaman", entry =>
-            {
-                return DateTime.UtcNow.ToString();
-            });
-            _memoryCache.Remove("time");
-            ViewBag.time = _memoryCache.Get<string>("time");
+            _memoryCache.TryGetValue("time", out string timeCache);
+
+
+            ViewBag.time = timeCache;
             return View();
         }
     }
